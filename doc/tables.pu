@@ -1,0 +1,43 @@
+@startuml oidc_tutorial
+entity users {
+  * id INT auto_increment (PK)
+  ---
+  * user_name VARCHAR(255)
+  * email VARCHAR(255)
+  * created DATETIME
+  * updated DATETIME
+}
+
+entity account_infos {
+  * id INT auto_increment (PK)
+  ---
+  * bank_id INT(FK)
+  * user_id INT(FK)
+  * account_type ENUM
+  * secret_number INT(4)
+  * created DATETIME
+  * updated DATETIME
+}
+
+entity banks {
+  * id INT auto_increment (PK)
+  ---
+  * bank_name VARCHAR(255)
+  * created DATETIME
+  * updated DATETIME
+}
+
+entity branches {
+  * id INT auto_increment (PK)
+  ---
+  * branch_name VARCHAR(255)
+  * bank_id INT(FK)
+  * created DATETIME
+  * updated DATETIME
+}
+
+users ||--o{ account_infos
+account_infos }o-r-|| banks
+banks ||-u-{ branches
+
+@enduml
