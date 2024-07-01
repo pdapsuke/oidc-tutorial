@@ -18,6 +18,7 @@ exit 1
 PROJECT_ROOT="$(cd $(dirname $0)/..; pwd)"
 cd "$PROJECT_ROOT"
 
+ENV_PATH="${PROJECT_ROOT}/local.env"
 USER_ID=$(id -u)
 GROUP_ID=$(id -g)
 while [ "$#" != 0 ]; do
@@ -43,6 +44,7 @@ docker run \
 	--rm \
 	-ti \
 	--network host \
+  --env-file $ENV_PATH \
 	-w /home/app \
 	--user="$USER_ID:$GROUP_ID" \
 	oidc-tutorial:latest \
