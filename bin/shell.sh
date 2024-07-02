@@ -45,7 +45,8 @@ docker run \
 	-ti \
 	--network host \
   --env-file $ENV_PATH \
-	-w /home/app \
+  -v $LOCAL_APP_DIR:/opt/app \
+	-w /opt/app \
 	--user="$USER_ID:$GROUP_ID" \
 	oidc-tutorial:latest \
 	"/bin/bash"
