@@ -25,6 +25,6 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # importの起点となるパスを環境変数として定義
-# ENV PYTHONPATH=/opt/app
+ENV PYTHONPATH=/opt/app
 
 CMD ["/bin/bash"]
