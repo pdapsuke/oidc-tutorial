@@ -1,8 +1,8 @@
 """create initial table
 
-Revision ID: 51b8e44f00fa
+Revision ID: 4bad17fab5c4
 Revises: 
-Create Date: 2024-07-02 21:15:48.976571
+Create Date: 2024-07-03 21:40:55.133986
 
 """
 from datetime import datetime
@@ -14,7 +14,7 @@ import sqlalchemy as sa
 now = datetime.now()
 
 # revision identifiers, used by Alembic.
-revision: str = '51b8e44f00fa'
+revision: str = '4bad17fab5c4'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -38,19 +38,19 @@ def upgrade() -> None:
             'id': 1,
             'bank_name': 'アニマル銀行',
             'created': now,
-            'updated': now
+            'updated': now,
         },
         {
             'id': 2,
             'bank_name': 'フラワー銀行',
             'created': now,
-            'updated': now
+            'updated': now,
         },
         {
             'id': 3,
             'bank_name': 'スター銀行',
             'created': now,
-            'updated': now
+            'updated': now,
         },
     ])
 
@@ -74,27 +74,11 @@ def upgrade() -> None:
             'user_name': 'admin',
             'email': 'admin@abc.com',
             'created': now,
-            'updated': now
+            'updated': now,
         },
     ])
 
     op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
-    op.create_table('account_infos',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('bank_id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('account_type', sa.Enum('normal', 'term', 'general', name='accounttype'), nullable=False),
-    sa.Column('secret_number', sa.Integer(), nullable=False),
-    sa.Column('created', sa.DateTime(), nullable=False),
-    sa.Column('updated', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['bank_id'], ['banks.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    mysql_charset='utf8mb4',
-    mysql_collate='utf8mb4_bin',
-    mysql_engine='InnoDB'
-    )
-    op.create_index(op.f('ix_account_infos_id'), 'account_infos', ['id'], unique=False)
     branches_table = op.create_table('branches',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('branch_name', sa.String(length=255, collation='utf8mb4_bin'), nullable=False),
@@ -114,76 +98,93 @@ def upgrade() -> None:
             'branch_name': 'いぬ',
             'bank_id': 1,
             'created': now,
-            'updated': now
+            'updated': now,
         },
         {
             'id': 2,
             'branch_name': 'ねこ',
             'bank_id': 1,
             'created': now,
-            'updated': now
+            'updated': now,
         },
         {
             'id': 3,
             'branch_name': 'とり',
             'bank_id': 1,
             'created': now,
-            'updated': now
+            'updated': now,
         },
         {
             'id': 4,
             'branch_name': 'ばら',
             'bank_id': 2,
             'created': now,
-            'updated': now
+            'updated': now,
         },
         {
             'id': 5,
             'branch_name': 'ひまわり',
             'bank_id': 2,
             'created': now,
-            'updated': now
+            'updated': now,
         },
         {
             'id': 6,
-            'branch_name': 'ちゅーりっぷ',
+            'branch_name': 'たんぽぽ',
             'bank_id': 2,
             'created': now,
-            'updated': now
+            'updated': now,
         },
         {
             'id': 7,
             'branch_name': 'デネブ',
             'bank_id': 3,
             'created': now,
-            'updated': now
+            'updated': now,
         },
         {
             'id': 8,
             'branch_name': 'アルタイル',
             'bank_id': 3,
             'created': now,
-            'updated': now
+            'updated': now,
         },
         {
             'id': 9,
             'branch_name': 'ベガ',
             'bank_id': 3,
             'created': now,
-            'updated': now
+            'updated': now,
         },
     ])
 
     op.create_index(op.f('ix_branches_id'), 'branches', ['id'], unique=False)
+    op.create_table('account_infos',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('branch_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('account_type', sa.Enum('normal', 'term', 'general', name='accounttype'), nullable=False),
+    sa.Column('account_number', sa.Integer(), nullable=False),
+    sa.Column('secret_number', sa.Integer(), nullable=False),
+    sa.Column('created', sa.DateTime(), nullable=False),
+    sa.Column('updated', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['branch_id'], ['branches.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    mysql_charset='utf8mb4',
+    mysql_collate='utf8mb4_bin',
+    mysql_engine='InnoDB'
+    )
+    op.create_index(op.f('ix_account_infos_id'), 'account_infos', ['id'], unique=False)
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_index(op.f('ix_branches_id'), table_name='branches')
-    op.drop_table('branches')
     op.drop_index(op.f('ix_account_infos_id'), table_name='account_infos')
     op.drop_table('account_infos')
+    op.drop_index(op.f('ix_branches_id'), table_name='branches')
+    op.drop_table('branches')
     op.drop_index(op.f('ix_users_id'), table_name='users')
     op.drop_table('users')
     op.drop_index(op.f('ix_banks_id'), table_name='banks')

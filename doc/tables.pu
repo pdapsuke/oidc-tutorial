@@ -11,10 +11,11 @@ entity users {
 entity account_infos {
   * id INT auto_increment (PK)
   ---
-  * bank_id INT(FK)
+  * branch_id INT(FK)
   * user_id INT(FK)
   * account_type ENUM
-  * secret_number INT(4)
+  * account_number INT
+  * secret_number INT
   * created DATETIME
   * updated DATETIME
 }
@@ -37,7 +38,7 @@ entity branches {
 }
 
 users ||--o{ account_infos
-account_infos }o-r-|| banks
+account_infos }o-u-|| branches
 banks ||-u-{ branches
 
 @enduml

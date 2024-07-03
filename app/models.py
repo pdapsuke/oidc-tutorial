@@ -33,26 +33,28 @@ class AccountType(enum.Enum):
     term = "定期口座"
     general = "総合口座"
 
+
 class AccountInfo(Base):
     __tablename__ = "account_infos"
     __table_args__ = {'mysql_engine':'InnoDB', 'mysql_charset':'utf8mb4','mysql_collate':'utf8mb4_bin'}
 
     id = Column(Integer, primary_key=True, index=True)
-    bank_id = Column(Integer, ForeignKey("banks.id"), nullable=False)
+    branch_id = Column(Integer, ForeignKey("branches.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     account_type = Column(Enum(AccountType), nullable=False)
+    account_number = Column(Integer, nullable=False)
     secret_number = Column(Integer, nullable=False)
     created = Column(DateTime, default=datetime.now, nullable=False)
     updated = Column(DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
 
-    # banksテーブルとの多対一のリレーション
-    bank = relationship(
-        "Bank",
-        back_populates="account_info",
+    # branchesテーブルとの多対一のリレーション
+    branch = relationship(
+        "Branch",
+        back_populates="account_infos",
     )
 
     # usersテーブルとの多対一のリレーション
-    bank = relationship(
+    user = relationship(
         "User",
         back_populates="account_infos",
     )
@@ -67,14 +69,8 @@ class Bank(Base):
     created = Column(DateTime, default=datetime.now, nullable=False)
     updated = Column(DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
 
-    # account_infosテーブルとの一対多のリレーション
-    account_infos = relationship(
-        "AccountInfo",
-        back_populates="bank",
-    )
-
     # branchesテーブルとの一対多のリレーション
-    bank = relationship(
+    branches = relationship(
         "Branch",
         back_populates="bank",
     )
@@ -91,7 +87,7 @@ class Branch(Base):
     updated = Column(DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
 
     # banksテーブルとの多対一のリレーション
-    account_infos = relationship(
+    bank = relationship(
         "Bank",
         back_populates="branches",
     )
