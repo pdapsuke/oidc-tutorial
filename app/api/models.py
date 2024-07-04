@@ -91,3 +91,9 @@ class Branch(Base):
         "Bank",
         back_populates="branches",
     )
+
+    # account_infosテーブルとの一対多のリレーション
+    account_infos = relationship(
+        "AccountInfo",
+        back_populates="branch",
+    )
