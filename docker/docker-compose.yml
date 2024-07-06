@@ -1,0 +1,12 @@
+version: '3.2'
+services:
+  api:
+    image: oidc-tutorial-api:latest
+    container_name: oidc-tutorial-api
+    volumes:
+      - type: bind
+        source: "${LOCAL_APP_DIR}"
+        target: /opt/app
+    env_file:
+      - "${ENV_PATH}"
+    network_mode: host

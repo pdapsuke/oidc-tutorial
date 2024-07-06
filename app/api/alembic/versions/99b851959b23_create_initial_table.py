@@ -1,8 +1,8 @@
 """create initial table
 
-Revision ID: 4bad17fab5c4
+Revision ID: 99b851959b23
 Revises: 
-Create Date: 2024-07-03 21:40:55.133986
+Create Date: 2024-07-06 11:27:01.500974
 
 """
 from datetime import datetime
@@ -14,7 +14,7 @@ import sqlalchemy as sa
 now = datetime.now()
 
 # revision identifiers, used by Alembic.
-revision: str = '4bad17fab5c4'
+revision: str = '99b851959b23'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -164,8 +164,8 @@ def upgrade() -> None:
     sa.Column('branch_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('account_type', sa.Enum('normal', 'term', 'general', name='accounttype'), nullable=False),
-    sa.Column('account_number', sa.Integer(), nullable=False),
-    sa.Column('secret_number', sa.Integer(), nullable=False),
+    sa.Column('account_number', sa.String(length=7, collation='utf8mb4_bin'), nullable=False),
+    sa.Column('secret_number', sa.String(length=4, collation='utf8mb4_bin'), nullable=False),
     sa.Column('created', sa.DateTime(), nullable=False),
     sa.Column('updated', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['branch_id'], ['branches.id'], ),

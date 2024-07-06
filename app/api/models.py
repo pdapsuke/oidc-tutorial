@@ -42,8 +42,8 @@ class AccountInfo(Base):
     branch_id = Column(Integer, ForeignKey("branches.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     account_type = Column(Enum(AccountType), nullable=False)
-    account_number = Column(Integer, nullable=False)
-    secret_number = Column(Integer, nullable=False)
+    account_number = Column(String(7, collation="utf8mb4_bin"), nullable=False)
+    secret_number = Column(String(4, collation="utf8mb4_bin"), nullable=False)
     created = Column(DateTime, default=datetime.now, nullable=False)
     updated = Column(DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
 
@@ -90,4 +90,10 @@ class Branch(Base):
     bank = relationship(
         "Bank",
         back_populates="branches",
+    )
+
+    # account_infosテーブルとの一対多のリレーション
+    account_infos = relationship(
+        "AccountInfo",
+        back_populates="branch",
     )
