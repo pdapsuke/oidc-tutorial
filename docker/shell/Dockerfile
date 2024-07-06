@@ -20,6 +20,9 @@ RUN groupadd -g $host_gid app && \
 COPY docker/shell/.private_bashrc /home/app/.private_bashrc
 RUN echo "source ~/.private_bashrc" >> /home/app/.bashrc
 
+# install nodejs
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
+
 # Pythonライブラリインストール
 COPY requirements.txt .
 RUN pip install -r requirements.txt
