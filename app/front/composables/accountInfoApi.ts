@@ -17,5 +17,9 @@ export const useAccountInfoApi = () => {
 		async getAll(user_id: number) {
 			return useApi().get<AccountInfoResponse[]>("getAccountInfos", "/account_infos/", {"user_id": user_id})
 		},
+    // 口座情報削除
+    async delete(id: number, user_id: number) {
+      return useApi().delete<{[index: string]: string}>("getAccountInfos", `/account_infos/${id}`, {"user_id": user_id})
+    },
 	}
 }
