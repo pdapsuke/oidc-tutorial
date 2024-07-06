@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from models import AccountInfo, Bank, Branch, User
-from schema import AccountInfoCreateSchema, AccountInfoResponseSchema, BankResponseSchema, BranchResponseSchema
+from schema import AccountInfoCreateSchema, AccountInfoDeleteSchema, AccountInfoResponseSchema, BankResponseSchema, BranchResponseSchema
 from session import get_session
 
 router = APIRouter()
@@ -87,14 +87,14 @@ def create_account_info(
 @router.delete("/account_infos/{id}")
 def delete_account_info(
     id: int,
-    user_id: int,
+    data: AccountInfoDeleteSchema,
     session: Session = Depends(get_session),
 ):
     account_info = session.query(AccountInfo).filter(AccountInfo.id == id).first()
     if account_info is None:
         raise HTTPException(status_code=400, detail="account_info not exists")
 
-    if account_info.user_id != user_id:
+    if account_info.user_id != data.user_id:
         raise HTTPException(status_code=400, detail="you can delete your own account_info")
 
     session.delete(account_info)

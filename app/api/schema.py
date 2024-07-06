@@ -38,3 +38,7 @@ class AccountInfoCreateSchema(BaseModel):
     account_type: AccountType
     account_number: str
     secret_number: str
+
+
+class AccountInfoDeleteSchema(BaseModel):
+    user_id: int
