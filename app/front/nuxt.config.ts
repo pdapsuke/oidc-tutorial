@@ -25,4 +25,10 @@ export default defineNuxtConfig({
       'process.env.DEBUG': false,
     },
   },
+  runtimeConfig: {
+    public: {
+      clientBaseUrl: '//localhost:8080/api/v1',
+      serverBaseUrl: 'http://localhost:8080/api/v1',
+    }
+  },
 })
