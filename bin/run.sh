@@ -46,6 +46,7 @@ build_image() {
 
 export DOCKER_BUILDKIT=1
 build_image "docker/api/Dockerfile" "oidc-tutorial-api:latest"
+build_image "docker/nginx/Dockerfile" "oidc-tutorial-nginx:latest"
 
 LOCAL_APP_DIR="${PROJECT_ROOT}/app"
 
