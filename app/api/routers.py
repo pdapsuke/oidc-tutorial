@@ -16,13 +16,10 @@ def get_banks(session: Session = Depends(get_session)):
     return banks
 
 @router.get("/branches/", response_model=List[BranchResponseSchema])
-def get_branches_by_bank_id(
-    bank_id: int,
+def get_branches(
     session: Session = Depends(get_session),
 ):
-    branches = session.query(Branch).filter(Branch.bank_id == bank_id).all()
-    if len(branches) == 0:
-        raise HTTPException(status_code=400, detail=f"branches those bank_id: {bank_id} not found.")
+    branches = session.query(Branch).all()
     return branches
 
 @router.get("/account_infos/", response_model=List[AccountInfoResponseSchema])
