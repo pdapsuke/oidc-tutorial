@@ -10,5 +10,4 @@
 # https://nuxt.com/docs/guide/directory-structure/gitignore
 **/node_modules
 **/.nuxt
-**/.output
 **/*.log
