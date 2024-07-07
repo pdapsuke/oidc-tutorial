@@ -10,3 +10,7 @@ services:
     env_file:
       - "${ENV_PATH}"
     network_mode: host
+  nginx:
+    image: oidc-tutorial-nginx:latest
+    container_name: oidc-tutorial-nginx
+    network_mode: host
