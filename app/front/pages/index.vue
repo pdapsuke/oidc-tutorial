@@ -1,8 +1,21 @@
 <template>
   <div>
     <Alert ref="alert" />
-    <div class="mb-3">
-      <div class="text-h4">銀行口座 情報一覧</div>
+    <div class="mb-3 d-flex align-center">
+      <div class="text-h4 mr-5">銀行口座 情報一覧</div>
+      <div>
+        <v-btn icon flat
+          @click="createDialog.open({
+            banks: banks,
+            branches: branches,
+          })">
+          <v-icon size="x-large" color="primary" :icon="mdiPlusCircle"></v-icon>
+          <v-tooltip
+            activator="parent"
+            location="end"
+          >新規登録</v-tooltip>
+        </v-btn>
+      </div>
     </div>
     <v-table>
       <thead>
@@ -55,24 +68,38 @@
     message="本当に削除しますか"
     confirmBtn="削除"
     cancelBtn="キャンセル"
-    colorCancel="black"
+    colorCancel="primary"
     colorConfirm="error"
     ref="confirmDeletion"
     @confirm="deleteAccountInfo">
   </ConfirmDialog>
 
+  <!-- 新規作成ダイアログ -->
+  <CreateDialog
+    title="銀行口座の新規登録"
+    message="必要事項を入力してください"
+    confirmBtn="登録"
+    cancelBtn="キャンセル"
+    colorCancel="primary"
+    colorConfirm="error"
+    ref="createDialog"
+    @confirm="createAccountInfo">
+  </CreateDialog>
 </template>
 
 <script setup lang="ts">
-import { mdiEye, mdiEyeOff, mdiDeleteForever } from '@mdi/js'
+import { mdiEye, mdiEyeOff, mdiDeleteForever, mdiPlusCircle } from '@mdi/js'
 
 // 認証機能を実装するまで、userId=1とする
 const userId = ref<number>(1)
+// パスワードの表示・非表示のコントロール
 const showPasswords = ref<{ [index: number]: boolean}>({})
 
 const alert = ref<any>(null)
 const confirmDeletion = ref<any>(null)
+const createDialog = ref<any>(null)
 
+// datetimeをYYYY/MM/DD形式に変換
 function formatDate(datetime: string): string {
   let d = new Date(datetime)
   let year = d.getFullYear()
@@ -81,7 +108,7 @@ function formatDate(datetime: string): string {
   return `${year}/${month}/${day}`
 }
 
-// アイテム一覧取得
+// 口座情報一覧取得
 const { data: accountInfos, error: getAccountInfosError, refresh: refreshAccountInfos } = await useAccountInfoApi().getAll(userId.value)
 if (!accountInfos.value || getAccountInfosError.value) {
   alert.value.error(getAccountInfosError.value)
@@ -90,6 +117,18 @@ if (accountInfos.value !== null) {
   accountInfos.value.forEach((ai) => {
     showPasswords.value[ai.id] = false
   })
+}
+
+// 銀行一覧取得
+const { data: banks, error: getBanksError } = await useBankApi().getAll()
+if (!banks.value || getBanksError.value) {
+  alert.value.error(getBanksError.value)
+}
+
+// 支店一覧取得
+const { data: branches, error: getBranchesError } = await useBranchApi().getAll()
+if (!branches.value || getBranchesError.value) {
+  alert.value.error(getBranchesError.value)
 }
 
 // 口座情報の削除処理
@@ -104,4 +143,26 @@ async function deleteAccountInfo(confirm: boolean, params: {userId: number, acco
   await refreshAccountInfos()
 }
 
+// 口座情報の作成処理
+async function createAccountInfo(
+  confirm: boolean,
+  params: any,
+) {
+  if (!confirm) { return }
+  const { data: postResponse, error: postError } = await useAccountInfoApi().post({
+    branch_id: params.selectedBranch,
+    user_id: userId.value,
+    account_type: params.selectedAccountType,
+    account_number: params.accountNumber,
+    secret_number: params.secretNumber,
+  })
+  if (!postResponse.value || postError.value) {
+    alert.value.error(postError.value)
+    return
+  }
+  if (postResponse.value) {
+    alert.value.success('口座情報の登録に成功しました')
+  }
+  refreshAccountInfos()
+}
 </script>

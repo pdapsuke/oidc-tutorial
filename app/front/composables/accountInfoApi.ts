@@ -1,14 +1,23 @@
+// 口座情報作成時のリクエストボディの型定義
+interface AccountInfoPost {
+  branch_id: number
+  user_id: number
+  account_type: string
+  account_number: string
+  secret_number: string
+}
+
 // 口座情報取得時のレスポンスボディの型定義
 interface AccountInfoResponse {
-    id: number
-    user_id: number
-    bank_name: string
-    branch_name: string
-    account_type: string
-    account_number: string
-    secret_number: string
-    created: string
-  }
+  id: number
+  user_id: number
+  bank_name: string
+  branch_name: string
+  account_type: string
+  account_number: string
+  secret_number: string
+  created: string
+}
 
 // useAccountInfoApiの名前で関数をエクスポート
 export const useAccountInfoApi = () => {
@@ -21,5 +30,9 @@ export const useAccountInfoApi = () => {
     async delete(id: number, user_id: number) {
       return useApi().delete<{[index: string]: string}>("getAccountInfos", `/account_infos/${id}`, {"user_id": user_id})
     },
+    // 口座情報作成
+    async post(params: AccountInfoPost) {
+      return useApi().post<{[index: string]: string}>("postAccountInfo", "/account_infos/", params)
+    }
 	}
 }
