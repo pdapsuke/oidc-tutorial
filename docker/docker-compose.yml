@@ -14,3 +14,8 @@ services:
     image: oidc-tutorial-nginx:latest
     container_name: oidc-tutorial-nginx
     network_mode: host
+  keycloak:
+    image: oidc-tutorial-keycloak:latest
+    container_name: oidc-tutorial-keycloak
+    network_mode: host
+    command: ["start-dev", "--http-port=8888"]
