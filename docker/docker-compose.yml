@@ -17,5 +17,9 @@ services:
   keycloak:
     image: oidc-tutorial-keycloak:latest
     container_name: oidc-tutorial-keycloak
+    volumes:
+      - type: bind
+        source: ../keycloak-dist/export
+        target: /opt/keycloak/data/import
     network_mode: host
-    command: ["start-dev", "--http-port=8888"]
+    command: ["start-dev", "--http-port=8888", "--import-realm"]
