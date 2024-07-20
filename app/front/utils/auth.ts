@@ -1,0 +1,63 @@
+import { Buffer } from 'buffer'
+
+// Authクラスを返すuseAuthをエクスポートし外部から利用できるようにする
+export const useAuth = () => {
+  return Auth
+}
+
+class Auth {
+  // Cookieのキー
+  private static ACCESS_TOKEN_KEY: string = "__access_token"
+
+  // 認証済みかどうかの判定
+  public static authenticated(): boolean {
+    let payload = this.getPayload()
+    if (payload) {
+      // トークンの有効期限を検証
+      let now  = Math.floor((new Date()).getTime() / 1000)
+      return payload.exp > now
+    }
+    return false
+  }
+
+  // CookieからJWTを削除
+  public static logout(): void {
+    const cookie = useCookie(this.ACCESS_TOKEN_KEY)
+    cookie.value = null
+  }
+
+  // JWTをCookieに保存
+  public static login(token: string): void {
+    const cookie = useCookie(this.ACCESS_TOKEN_KEY)
+    cookie.value = token
+  }
+
+  // CookieからJWTを取得する
+  public static getToken(): string | null {
+    const cookie = useCookie(this.ACCESS_TOKEN_KEY);
+    let token = cookie.value;
+    return (token && Auth.authenticated()) ? token : null;
+  }
+
+  // Cookieに保存されているJWTのpayloadをオブジェクト形式で取得する
+  public static getPayload(): any | null {
+    const cookie = useCookie(this.ACCESS_TOKEN_KEY)
+    let token = cookie.value
+    if (!token) return null
+    let payload = token.split(".")[1]
+    let decoded = Buffer.from(payload, "base64").toString()
+    return JSON.parse(decoded)
+  }
+
+  // JWTのペイロードからユーザー名を取得する
+  public static getUsername(): string | null {
+    let payload = Auth.getPayload();
+    return (payload && !!payload["cognito:username"]) ? payload["cognito:username"] : null
+  }
+
+  // JWTのペイロードからEmailを取得する
+  public static getUserEmail(): string | null {
+    let payload = Auth.getPayload();
+    return (payload && !!payload["email"]) ? payload["email"] : null
+  }
+}

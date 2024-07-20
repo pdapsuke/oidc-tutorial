@@ -10,9 +10,7 @@
 
     <!-- コンテンツ >>> -->
     <v-main>
-      <v-container class="py-8 px-6" fluid >
-        <slot />
-      </v-container>
+      <slot />
     </v-main>
     <!-- <<< コンテンツ -->
 
