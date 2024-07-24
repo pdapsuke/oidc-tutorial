@@ -49,6 +49,7 @@ onMounted(() => {
   // 認可コードを使用してアクセストークンを取得
 	fetchAccessToken(`${queryParam}`).then(data => {
 		if (data) {
+      console.log(data.access_token) // デバッグ用
       useAuth().login(data.access_token)
       navigateTo('/')
 		} else {

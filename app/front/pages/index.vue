@@ -92,6 +92,9 @@
 <script setup lang="ts">
 import { mdiEye, mdiEyeOff, mdiDeleteForever, mdiPlusCircle } from '@mdi/js'
 
+// ミドルウェアによるログインチェック
+definePageMeta({ middleware: ["auth"] })
+
 // 認証機能を実装するまで、userId=1とする
 const userId = ref<number>(1)
 // パスワードの表示・非表示のコントロール
@@ -111,7 +114,7 @@ function formatDate(datetime: string): string {
 }
 
 // 口座情報一覧取得
-const { data: accountInfos, error: getAccountInfosError, refresh: refreshAccountInfos } = await useAccountInfoApi().getAll(userId.value)
+const { data: accountInfos, error: getAccountInfosError, refresh: refreshAccountInfos } = await useAccountInfoApi().getAll()
 if (!accountInfos.value || getAccountInfosError.value) {
   alert.value.error(getAccountInfosError.value)
 }
@@ -136,7 +139,7 @@ if (!branches.value || getBranchesError.value) {
 // 口座情報の削除処理
 async function deleteAccountInfo(confirm: boolean, params: {userId: number, accountInfoId: number}) {
   if (!confirm) { return }
-  const { error: deleteAccountInfoError } = await useAccountInfoApi().delete(params.accountInfoId, params.userId)
+  const { error: deleteAccountInfoError } = await useAccountInfoApi().delete(params.accountInfoId)
   if (deleteAccountInfoError.value) {
     alert.value.error(deleteAccountInfoError.value)
     return
@@ -153,7 +156,6 @@ async function createAccountInfo(
   if (!confirm) { return }
   const { data: postResponse, error: postError } = await useAccountInfoApi().post({
     branch_id: params.selectedBranch,
-    user_id: userId.value,
     account_type: params.selectedAccountType,
     account_number: params.accountNumber,
     secret_number: params.secretNumber,

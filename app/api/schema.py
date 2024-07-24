@@ -34,11 +34,6 @@ class AccountInfoResponseSchema(BaseModel):
 
 class AccountInfoCreateSchema(BaseModel):
     branch_id: int
-    user_id: int
     account_type: AccountType
     account_number: str
     secret_number: str
-
-
-class AccountInfoDeleteSchema(BaseModel):
-    user_id: int

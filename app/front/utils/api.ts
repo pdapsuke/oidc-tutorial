@@ -50,9 +50,9 @@ class Api {
     const url = import.meta.client ? `${clientBaseUrl}${path}` : `${serverBaseUrl}${path}`
 
     // 認証トークンを付与
-    // if (useAuth().authenticated()) {
-    //   headers.Authorization = `Bearer ${useAuth().getToken()}`
-    // }
+    if (useAuth().authenticated()) {
+      headers.Authorization = `Bearer ${useAuth().getToken()}`
+    }
 
     // リクエスト送信
     return await useAsyncData<T>(

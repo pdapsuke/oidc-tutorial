@@ -1,7 +1,6 @@
 // 口座情報作成時のリクエストボディの型定義
 interface AccountInfoPost {
   branch_id: number
-  user_id: number
   account_type: string
   account_number: string
   secret_number: string
@@ -23,12 +22,12 @@ interface AccountInfoResponse {
 export const useAccountInfoApi = () => {
 	return {
 		// 口座情報一覧取得
-		async getAll(user_id: number) {
-			return useApi().get<AccountInfoResponse[]>("getAccountInfos", "/account_infos/", {"user_id": user_id})
+		async getAll() {
+			return useApi().get<AccountInfoResponse[]>("getAccountInfos", "/account_infos/")
 		},
     // 口座情報削除
-    async delete(id: number, user_id: number) {
-      return useApi().delete<{[index: string]: string}>("getAccountInfos", `/account_infos/${id}`, {"user_id": user_id})
+    async delete(id: number) {
+      return useApi().delete<{[index: string]: string}>("getAccountInfos", `/account_infos/${id}`)
     },
     // 口座情報作成
     async post(params: AccountInfoPost) {
