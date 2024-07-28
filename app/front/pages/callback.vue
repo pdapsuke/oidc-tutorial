@@ -15,14 +15,14 @@ queryParam.toString()
 
 async function fetchAccessToken(authCode: string) {
   // トークンエンドポイントへのリクエストのパラメータを定義
-  const tokenEndpoint = 'http://localhost:8888/realms/oidc-tutorial/protocol/openid-connect/token';
+  const tokenEndpoint = 'http://localhost:8888/realms/oidc-tutorial/protocol/openid-connect/token'
   const { clientId, redirectUri } = useRuntimeConfig().public
-  const params = new URLSearchParams();
+  const params = new URLSearchParams()
 
-  params.append('grant_type', 'authorization_code');
-  params.append('code', authCode);
-  params.append('client_id', `${clientId}`);
-  params.append('redirect_uri', `${redirectUri}`);
+  params.append('grant_type', 'authorization_code')
+  params.append('code', authCode)
+  params.append('client_id', `${clientId}`)
+  params.append('redirect_uri', `${redirectUri}`)
 
   try {
     const response = await fetch(tokenEndpoint, {
@@ -49,8 +49,8 @@ onMounted(() => {
   // 認可コードを使用してアクセストークンを取得
 	fetchAccessToken(`${queryParam}`).then(data => {
 		if (data) {
-      console.log(data.access_token) // デバッグ用
-      useAuth().login(data.access_token)
+      console.log(data) // デバッグ用
+      useAuth().login(data.access_token, data.refresh_token)
       navigateTo('/')
 		} else {
       setTimeout(() => {

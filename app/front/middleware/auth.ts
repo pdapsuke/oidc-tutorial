@@ -1,7 +1,7 @@
 // 各ページを読み込む前にトークンを検証する
 export default defineNuxtRouteMiddleware(async(to, from) => {
-	// Cookieからトークン取得, 取得できなければ'/signin'にリダイレクト
-	const token = useAuth().getToken()
+	// Cookieからアクセストークン取得, 取得できなければ'/login'にリダイレクト
+	const token = useAuth().getToken("access")
 	if (token==null) {
 		return navigateTo('/login')
 	}

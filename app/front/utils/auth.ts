@@ -8,10 +8,11 @@ export const useAuth = () => {
 class Auth {
   // Cookieのキー
   private static ACCESS_TOKEN_KEY: string = "__access_token"
+  private static REFRESH_TOKEN_KEY: string = "__refresh_token"
 
   // 認証済みかどうかの判定
-  public static authenticated(): boolean {
-    let payload = this.getPayload()
+  public static authenticated(type: "access" | "refresh"): boolean {
+    let payload = this.getPayload(type)
     if (payload) {
       // トークンの有効期限を検証
       let now  = Math.floor((new Date()).getTime() / 1000)
@@ -22,26 +23,32 @@ class Auth {
 
   // CookieからJWTを削除
   public static logout(): void {
-    const cookie = useCookie(this.ACCESS_TOKEN_KEY)
-    cookie.value = null
+    const accessCookie = useCookie(this.ACCESS_TOKEN_KEY)
+    const refreshCookie = useCookie(this.REFRESH_TOKEN_KEY)
+    accessCookie.value = null
+    refreshCookie.value = null
   }
 
   // JWTをCookieに保存
-  public static login(token: string): void {
-    const cookie = useCookie(this.ACCESS_TOKEN_KEY)
-    cookie.value = token
+  public static login(accessToken: string, refreshToken: string): void {
+    const accessCookie = useCookie(this.ACCESS_TOKEN_KEY)
+    const refreshCookie = useCookie(this.REFRESH_TOKEN_KEY)
+    accessCookie.value = accessToken
+    refreshCookie.value = refreshToken
   }
 
   // CookieからJWTを取得する
-  public static getToken(): string | null {
-    const cookie = useCookie(this.ACCESS_TOKEN_KEY);
+  public static getToken(type: "access" | "refresh"): string | null {
+    const TOKEN_KEY = (type == "access") ? this.ACCESS_TOKEN_KEY : this.REFRESH_TOKEN_KEY
+    const cookie = useCookie(TOKEN_KEY);
     let token = cookie.value;
-    return (token && Auth.authenticated()) ? token : null;
+    return (token && Auth.authenticated(type)) ? token : null;
   }
 
   // Cookieに保存されているJWTのpayloadをオブジェクト形式で取得する
-  public static getPayload(): any | null {
-    const cookie = useCookie(this.ACCESS_TOKEN_KEY)
+  public static getPayload(type: "access" | "refresh"): any | null {
+    const TOKEN_KEY = (type == "access") ? this.ACCESS_TOKEN_KEY : this.REFRESH_TOKEN_KEY
+    const cookie = useCookie(TOKEN_KEY)
     let token = cookie.value
     if (!token) return null
     let payload = token.split(".")[1]
@@ -51,13 +58,13 @@ class Auth {
 
   // JWTのペイロードからユーザー名を取得する
   public static getUsername(): string | null {
-    let payload = Auth.getPayload();
-    return (payload && !!payload["cognito:username"]) ? payload["cognito:username"] : null
+    let payload = Auth.getPayload("access");
+    return (payload && !!payload["name"]) ? payload["name"] : null
   }
 
   // JWTのペイロードからEmailを取得する
   public static getUserEmail(): string | null {
-    let payload = Auth.getPayload();
+    let payload = Auth.getPayload("access");
     return (payload && !!payload["email"]) ? payload["email"] : null
   }
 }
