@@ -29,6 +29,8 @@ export default defineNuxtConfig({
     public: {
       clientBaseUrl: '//localhost:8080/api/v1',
       serverBaseUrl: 'http://localhost:8080/api/v1',
+      clientId: 'oidc-tutorial',
+      redirectUri: (process.env.MODE == 'dev') ? 'http://localhost:3000/callback' : 'http://localhost/callback',
     }
   },
 })

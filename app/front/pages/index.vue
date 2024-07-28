@@ -1,66 +1,68 @@
 <template>
-  <div>
-    <Alert ref="alert" />
-    <div class="mb-3 d-flex align-center">
-      <div class="text-h4 mr-5">銀行口座 情報一覧</div>
-      <div>
-        <v-btn icon flat
-          @click="createDialog.open({
-            banks: banks,
-            branches: branches,
-          })">
-          <v-icon size="x-large" color="primary" :icon="mdiPlusCircle"></v-icon>
-          <v-tooltip
-            activator="parent"
-            location="end"
-          >新規登録</v-tooltip>
-        </v-btn>
+  <v-container class="py-8 px-6" fluid >
+    <div>
+      <Alert ref="alert" />
+      <div class="mb-3 d-flex align-center">
+        <div class="text-h4 mr-5">銀行口座 情報一覧</div>
+        <div>
+          <v-btn icon flat
+            @click="createDialog.open({
+              banks: banks,
+              branches: branches,
+            })">
+            <v-icon size="x-large" color="primary" :icon="mdiPlusCircle"></v-icon>
+            <v-tooltip
+              activator="parent"
+              location="end"
+            >新規登録</v-tooltip>
+          </v-btn>
+        </div>
       </div>
+      <v-table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>銀行名</th>
+            <th>支店名</th>
+            <th>口座種別</th>
+            <th>口座番号</th>
+            <th>暗証番号</th>
+            <th>登録日</th>
+            <th>アクション</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="ai in accountInfos" :key="ai.id">
+            <td>{{ ai.id }}</td>
+            <td>{{ ai.bank_name }}</td>
+            <td>{{ ai.branch_name }}</td>
+            <td>{{ ai.account_type }}</td>
+            <td>{{ ai.account_number }}</td>
+            <td>
+              <v-text-field
+                :model-value="ai.secret_number"
+                :prepend-icon="showPasswords[ai.id] ? mdiEye : mdiEyeOff"
+                :type="showPasswords[ai.id] ? 'text' : 'password'"
+                @click:prepend="showPasswords[ai.id] = !showPasswords[ai.id]"
+                variant="plain"
+                readonly
+              ></v-text-field>
+            </td>
+            <td>{{ formatDate(ai.created) }}</td>
+            <td>
+              <v-btn icon flat
+                @click="confirmDeletion.open({
+                  userId: userId,
+                  accountInfoId: ai.id,
+                })"
+              ><v-icon color="error" :icon="mdiDeleteForever"></v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
     </div>
-    <v-table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>銀行名</th>
-          <th>支店名</th>
-          <th>口座種別</th>
-          <th>口座番号</th>
-          <th>暗証番号</th>
-          <th>登録日</th>
-          <th>アクション</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="ai in accountInfos" :key="ai.id">
-          <td>{{ ai.id }}</td>
-          <td>{{ ai.bank_name }}</td>
-          <td>{{ ai.branch_name }}</td>
-          <td>{{ ai.account_type }}</td>
-          <td>{{ ai.account_number }}</td>
-          <td>
-            <v-text-field
-              :model-value="ai.secret_number"
-              :prepend-icon="showPasswords[ai.id] ? mdiEye : mdiEyeOff"
-              :type="showPasswords[ai.id] ? 'text' : 'password'"
-              @click:prepend="showPasswords[ai.id] = !showPasswords[ai.id]"
-              variant="plain"
-              readonly
-            ></v-text-field>
-          </td>
-          <td>{{ formatDate(ai.created) }}</td>
-          <td>
-            <v-btn icon flat
-              @click="confirmDeletion.open({
-                userId: userId,
-                accountInfoId: ai.id,
-              })"
-            ><v-icon color="error" :icon="mdiDeleteForever"></v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
-  </div>
+  </v-container>
 
   <!-- 削除確認ダイアログ -->
   <ConfirmDialog
@@ -90,6 +92,9 @@
 <script setup lang="ts">
 import { mdiEye, mdiEyeOff, mdiDeleteForever, mdiPlusCircle } from '@mdi/js'
 
+// ミドルウェアによるログインチェック
+definePageMeta({ middleware: ["auth"] })
+
 // 認証機能を実装するまで、userId=1とする
 const userId = ref<number>(1)
 // パスワードの表示・非表示のコントロール
@@ -109,7 +114,7 @@ function formatDate(datetime: string): string {
 }
 
 // 口座情報一覧取得
-const { data: accountInfos, error: getAccountInfosError, refresh: refreshAccountInfos } = await useAccountInfoApi().getAll(userId.value)
+const { data: accountInfos, error: getAccountInfosError, refresh: refreshAccountInfos } = await useAccountInfoApi().getAll()
 if (!accountInfos.value || getAccountInfosError.value) {
   alert.value.error(getAccountInfosError.value)
 }
@@ -134,7 +139,7 @@ if (!branches.value || getBranchesError.value) {
 // 口座情報の削除処理
 async function deleteAccountInfo(confirm: boolean, params: {userId: number, accountInfoId: number}) {
   if (!confirm) { return }
-  const { error: deleteAccountInfoError } = await useAccountInfoApi().delete(params.accountInfoId, params.userId)
+  const { error: deleteAccountInfoError } = await useAccountInfoApi().delete(params.accountInfoId)
   if (deleteAccountInfoError.value) {
     alert.value.error(deleteAccountInfoError.value)
     return
@@ -151,7 +156,6 @@ async function createAccountInfo(
   if (!confirm) { return }
   const { data: postResponse, error: postError } = await useAccountInfoApi().post({
     branch_id: params.selectedBranch,
-    user_id: userId.value,
     account_type: params.selectedAccountType,
     account_number: params.accountNumber,
     secret_number: params.secretNumber,
