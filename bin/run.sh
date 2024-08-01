@@ -48,6 +48,8 @@ export DOCKER_BUILDKIT=1
 build_image "docker/api/Dockerfile" "oidc-tutorial-api:latest"
 build_image "docker/nginx/Dockerfile" "oidc-tutorial-nginx:latest"
 build_image "docker/keycloak/Dockerfile" "oidc-tutorial-keycloak:latest"
+build_image "docker/csrf_nginx/Dockerfile" "oidc-tutorial-csrf-nginx:latest"
+
 
 LOCAL_APP_DIR="${PROJECT_ROOT}/app"
 

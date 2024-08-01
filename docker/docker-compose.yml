@@ -14,6 +14,14 @@ services:
     image: oidc-tutorial-nginx:latest
     container_name: oidc-tutorial-nginx
     network_mode: host
+  csrf-nginx:
+    image: oidc-tutorial-csrf-nginx:latest
+    container_name: oidc-tutorial-csrf-nginx
+    volumes:
+      - type: bind
+        source: "${LOCAL_APP_DIR}/csrf"
+        target: /usr/share/nginx/html
+    network_mode: host
   keycloak:
     image: oidc-tutorial-keycloak:latest
     container_name: oidc-tutorial-keycloak
