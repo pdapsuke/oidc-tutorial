@@ -377,6 +377,29 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
   "users" : [ {
+    "id" : "5c12527d-335a-4f3f-a6e0-486a6227cbbf",
+    "username" : "csrf_attacker",
+    "firstName" : "csrf",
+    "lastName" : "attacker",
+    "email" : "csrf_attacke@example.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1722662070198,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "89964237-6409-4fef-8276-879ad7226104",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1722662112522,
+      "secretData" : "{\"value\":\"j5izXuRIYIs+YOJ8ApcmhcEmWIAdU5hZnvO1yLxP9v0=\",\"salt\":\"CmleDGHwxf7rz0lHogEpVg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-oidc-tutorial" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "12ad0a4b-4827-4911-ad8e-eee8885349ee",
     "username" : "user1",
     "firstName" : "hoge",
@@ -391,29 +414,6 @@
       "type" : "password",
       "createdDate" : 1721022581639,
       "secretData" : "{\"value\":\"bVx/uq9cr8iEap0uXktqh5y8BGuWogThEAlV20fTQ18=\",\"salt\":\"lHdC/C/Hiud8Qr4ySNdqUQ==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
-    } ],
-    "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-oidc-tutorial" ],
-    "notBefore" : 0,
-    "groups" : [ ]
-  }, {
-    "id" : "2a748460-dad7-4804-8bb7-ba69607d0429",
-    "username" : "user2",
-    "firstName" : "hoge2",
-    "lastName" : "fuga2",
-    "email" : "user2@example.com",
-    "emailVerified" : false,
-    "createdTimestamp" : 1721024713181,
-    "enabled" : true,
-    "totp" : false,
-    "credentials" : [ {
-      "id" : "4781c589-c5bc-4e52-bf31-c49942459ad3",
-      "type" : "password",
-      "userLabel" : "My password",
-      "createdDate" : 1721024729210,
-      "secretData" : "{\"value\":\"Foeszc3Qr1V3bNvrpSlF05ziOI9mDxDczzajRBuVzTk=\",\"salt\":\"rl2D+0tYkQWXYs6RXDyl+w==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
     } ],
     "disableableCredentialTypes" : [ ],

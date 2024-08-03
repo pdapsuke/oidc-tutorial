@@ -24,7 +24,12 @@ async function fetchAccessToken(authCode: string) {
   params.append('client_id', `${clientId}`)
   params.append('redirect_uri', `${redirectUri}`)
 
+  const sleep = (ms:number) => new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
+
   try {
+    await sleep(5000)
     const response = await fetch(tokenEndpoint, {
       method: 'POST',
       headers: {
@@ -55,7 +60,7 @@ onMounted(() => {
 		} else {
       setTimeout(() => {
         navigateTo('/login')
-      }, 2000);
+      }, 2000)
     }
 	});
 });
