@@ -10,6 +10,5 @@ RUN echo 'ja_JP.UTF-8 UTF-8' >> /etc/locale.gen && \
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-COPY ./app/front/.output/public /usr/share/nginx/html
 COPY ./docker/nginx/config/nginx.conf /etc/nginx/nginx.conf
 COPY ./docker/nginx/config/default.conf /etc/nginx/conf.d/default.conf
