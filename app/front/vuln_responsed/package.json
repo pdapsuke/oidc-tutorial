@@ -1,0 +1,23 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "keycloak-js": "^25.0.2",
+    "nuxt": "^3.12.3",
+    "vue": "latest"
+  },
+  "devDependencies": {
+    "@mdi/js": "^7.4.47",
+    "sass": "^1.77.6",
+    "vite-plugin-vuetify": "^2.0.3",
+    "vuetify": "^3.6.11"
+  }
+}
