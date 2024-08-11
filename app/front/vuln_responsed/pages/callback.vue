@@ -6,62 +6,27 @@
 </template>
 
 <script setup lang="ts">
+import Keycloak from 'keycloak-js'
+
 const alert = ref<any>(null)
-const route = useRoute();
-
-// クエリパラメータのcode(認可コード)の値を取得
-const queryParam = route.query.code || '';
-queryParam.toString()
-
-async function fetchAccessToken(authCode: string) {
-  // トークンエンドポイントへのリクエストのパラメータを定義
-  const tokenEndpoint = 'http://localhost:8888/realms/oidc-tutorial/protocol/openid-connect/token'
-  const { clientId, redirectUri } = useRuntimeConfig().public
-  const params = new URLSearchParams()
-
-  params.append('grant_type', 'authorization_code')
-  params.append('code', authCode)
-  params.append('client_id', `${clientId}`)
-  params.append('redirect_uri', `${redirectUri}`)
-
-  const sleep = (ms:number) => new Promise(resolve => {
-    setTimeout(resolve, ms)
-  })
-
-  try {
-    await sleep(5000)
-    const response = await fetch(tokenEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: params.toString(),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch access token');
-    }
-
-    // トークンエンドポイントからのレスポンスを返す
-    return response.json();
-  } catch (error) {
-    alert.value.error(`Error fetching access token: ${error}`);
-    console.error('Error fetching access token:', error);
-  }
-}
+const auth = useAuth()
+const keycloak = useState<Keycloak>('keycloak') // keycloakの状態を取得
 
 onMounted(() => {
-  // 認可コードを使用してアクセストークンを取得
-	fetchAccessToken(`${queryParam}`).then(data => {
-		if (data) {
-      console.log(data) // デバッグ用
-      useAuth().login(data.access_token, data.refresh_token)
+  new Promise<void>((resolve) => {
+    auth.login(keycloak.value.token || '', keycloak.value.refreshToken || '')
+    resolve()
+  }).then(() => {
+    console.log(auth.authenticated('access'))
+    setTimeout(() => {
       navigateTo('/')
-		} else {
-      setTimeout(() => {
-        navigateTo('/login')
-      }, 2000)
-    }
-	});
-});
+    }, 2000)}
+  )
+  .catch((error) => { 
+    console.error(error)
+    setTimeout(() => {
+      navigateTo('/login')
+    }, 2000)
+  })
+})
 </script>
