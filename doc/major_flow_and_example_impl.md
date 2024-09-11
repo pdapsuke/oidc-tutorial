@@ -1,4 +1,6 @@
 # OIDCのフローと具体的な実装例
+[READMEに戻る](../README.md)
+
 ## OIDCのフロー
 ### フローの種類
 OIDCには以下の5つのフローがある。それぞれ以下のサイトで解説されている。
@@ -26,9 +28,11 @@ https://developer.okta.com/docs/concepts/oauth-openid/#choose-an-oauth-2-0-flow
 #### 用語の補足
 - Client: トークンを発行してもらうアプリケーション
 - Authorization Server: トークンを発行するサーバ
-- 認可エンドポイント: ユーザーの認証, 認可を開始するためのエンドポイント。Authorization Serverが提供する。Authorization Serverが提供する。
-- トークンエンドポイント: トークンを取得するためのエンドポイント。
-- リダイレクションエンドポイント: 認可エンドポイントで認証や認可した結果を、clientが受け取るためのエンドポイント。clientが提供し、ユーザー端末がアクセスする。
+- 認可エンドポイント: ユーザーの認証, 認可を開始するためのエンドポイント。Authorization Serverが提供する。Authorization Serverが提供する
+- トークンエンドポイント: トークンを取得するためのエンドポイント
+- リダイレクションエンドポイント: 認可エンドポイントで認証や認可した結果を、clientが受け取るためのエンドポイント。clientが提供し、ユーザー端末がアクセスする
+
+<a id="token_verification"></a>
 
 ### 取得したアクセストークンの検証
 ClientからResource Server(アクセストークンを使ってアクセスされるサーバ=認証されたユーザーのみにコンテンツを配信するサーバともいえる)にアクセスする際、アクセストークンをResource Serverに渡す必要がある。Resource Serverは渡されたトークンの有効性を以下の方法で検証する。
@@ -46,12 +50,12 @@ OIDC（認可コードフロー）が導入されたサンプルWebアプリケ�
 ![サンプルアプリのネットワーク構成](./img/oidc_tutorial_local_keycloak.jpg)
 
 ### アプリケーション起動コマンド
-※dockerがインストール必要
+※docker, docker-composeインストール済みが前提
 ```shell
 # ローカルMySQLを起動
 ./bin/mysql.sh
 # 開発シェルにログイン
-./bin/mysql.sh
+./bin/shell.sh
 # DBマイグレーション
 ./bin/init-database.sh
 # 開発シェルログアウト
@@ -60,14 +64,16 @@ exit
 ./bin/run.sh
 ```
 
-### OIDC（認可コードフロー）によるログインを試してみる
-#### ログイン方法
+### ログイン方法
 ログインURL: `http://localhost/login`  
 初期ユーザー: `user1`, pass: `user1` ＊keycloak起動時に初期登録されます
 
+#### 確認ポイント
+- 認可コードフローのどの段階にいて、どのような処理が実行されているか、表示されるアニメーションにて確認
+- ログイン後、認証成功時にAuthorization Serverから取得したアクセストークン, リフレッシュトークンがCookieにセットされている  
+Resource Server(バックエンド)はこのトークンを検証して、アクセス可否を判断している。詳細は[取得したアクセストークンの検証](#token_verification)>電子署名の検証 を参照
+
 #### 参考: ソースコード
 - `app/front/default/pages/login.vue`: 認可エンドポイントへのリンクを生成
-- `app/front/default/pages/login.vue`: リダイレクトURLに含まれる認可コード抽出->ResourceServerに送信
+- `app/front/default/pages/callback.vue`: リダイレクトURLに含まれる認可コード抽出->ResourceServerに送信
 - `app/api/auth.py`: Resource Serverにおけるアクセストークン検証ロジック, 認証が必要なAPIが依存している
-
-1. どこが確認ポイントか記載する

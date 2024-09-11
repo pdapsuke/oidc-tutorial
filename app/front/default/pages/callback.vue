@@ -1,11 +1,21 @@
 <template>
   <v-container class="py-8 px-6 fillheight" fluid >
     <Alert ref="alert" />
-    <div>Please wait...</div>
+    <div class="d-flex justify-center mb-5 font-weight-bold"><リダイレクトURLから取得した認可コード> <br>{{ queryParam }}</div>
+    <div class="d-flex justify-center">
+      <v-img
+        :src="imgUrl"
+        alt="Tooltip Image"
+        max-width="600"
+        max-height="600"
+      ></v-img>
+    </div>
 	</v-container>
 </template>
 
 <script setup lang="ts">
+import imgUrl from '@/assets/oidc_token_request_animation.svg';
+
 const alert = ref<any>(null)
 const route = useRoute();
 
@@ -29,7 +39,7 @@ async function fetchAccessToken(authCode: string) {
   })
 
   try {
-    await sleep(5000)
+    await sleep(15000)
     const response = await fetch(tokenEndpoint, {
       method: 'POST',
       headers: {
