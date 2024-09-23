@@ -3,7 +3,7 @@
 
 ## OIDCのフロー
 ### フローの種類
-OIDCには以下の5つのフローがある。それぞれ以下のサイトで解説されている。
+OIDCでは以下のフローが知られている。それぞれ以下のサイトで解説されている。  
 https://developer.okta.com/docs/concepts/oauth-openid/#choose-an-oauth-2-0-flow
 
 - 認可コードフロー
@@ -12,7 +12,7 @@ https://developer.okta.com/docs/concepts/oauth-openid/#choose-an-oauth-2-0-flow
 - クライアントクレデンシャルフロー
 - リソースオーナーパスワードクレデンシャルフロー
 
-認可コードフローについては、代表格のため、以下で詳細を見ていく。
+認可コードフローについては最も代表的であるため、以下で詳細を見ていく。
 
 ### OIDCの代表的なフロー 【認可コードフロー】
 
@@ -43,9 +43,9 @@ ClientからResource Server(アクセストークンを使ってアクセスさ�
 OIDC（認可コードフロー）が導入されたサンプルWebアプリケーションをローカルで実行してみましょう。
 
 ### 構成
-- Authorization Server(localhost:8888): というID管理のOSS([Keycloak](https://www.keycloak.org/))を使用
+- Authorization Server(localhost:8888): [Keycloak](https://www.keycloak.org/)でIDを管理
 - Webサーバ(localhost:80): HTML, JSなど静的ファイルをNGINXで公開
-- Resource Server(localhost: 8080): APIサーバ。渡されたトークンの署名を検証のうえ、DBのデータを返す。
+- Resource Server(localhost: 8080): 渡されたトークンの署名を検証のうえ、コンテンツを返す
 
 ![サンプルアプリのネットワーク構成](./img/oidc_tutorial_local_keycloak.jpg)
 
@@ -70,8 +70,8 @@ exit
 
 #### 確認ポイント
 - 認可コードフローのどの段階にいて、どのような処理が実行されているか、表示されるアニメーションにて確認
-- ログイン後、認証成功時にAuthorization Serverから取得したアクセストークン, リフレッシュトークンがCookieにセットされている  
-Resource Server(バックエンド)はこのトークンを検証して、アクセス可否を判断している。詳細は[取得したアクセストークンの検証](#token_verification)>電子署名の検証 を参照
+- ログイン後、認証成功時にAuthorization Serverから取得したアクセストークン, リフレッシュトークンがClient側でCookieにセットされており、Resouce Serverに渡すことで、DBに格納されているデータの参照や操作や許可される
+
 
 #### 参考: ソースコード
 - `app/front/default/pages/login.vue`: 認可エンドポイントへのリンクを生成
