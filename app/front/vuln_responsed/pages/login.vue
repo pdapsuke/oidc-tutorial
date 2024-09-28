@@ -2,7 +2,7 @@
   <v-container class="fill-height">
 		<Alert ref="alert" />
 		<v-row  justify="center" align-content="center" class="d-flex">
-			<v-btn color="primary" @click="login">login with keycloak(vuln_responsed)</v-btn>
+			<v-btn color="primary" @click="login">login with keycloak</v-btn>
 		</v-row>
 	</v-container>
 </template>

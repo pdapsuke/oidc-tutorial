@@ -3,7 +3,7 @@
     <!-- ヘッダー >>> -->
     <v-app-bar color="primary" :elevation="2">
       <v-app-bar-title>
-        <div @click="useRouter().push('/')" style="cursor: pointer;">Account Manager</div>
+        <div @click="useRouter().push('/')" style="cursor: pointer;">OIDC-TUTORIAL</div>
       </v-app-bar-title>
       <div v-if="auth.authenticated('access')">ようこそ、{{ useAuth().getUsername() }}さん</div>
       <v-btn v-if="auth.authenticated('access')" :icon="mdiLogout" @click="logout()"></v-btn>
@@ -18,7 +18,7 @@
 
     <!-- フッター >>> -->
     <v-footer class="footer justify-center">
-      <div>&copy; 2024 Account Manager</div>
+      <div>&copy; 2024 OIDC-TUTORIAL</div>
     </v-footer>
     <!-- <<< フッター -->
   </v-app>

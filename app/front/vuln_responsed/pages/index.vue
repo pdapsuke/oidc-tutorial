@@ -3,7 +3,7 @@
     <div>
       <Alert ref="alert" />
       <div class="mb-3 d-flex align-center">
-        <div class="text-h4 mr-5">銀行口座 情報一覧(vuln_responsed)</div>
+        <div class="text-h4 mr-5">銀行口座 情報一覧</div>
         <div>
           <v-btn icon flat
             @click="createDialog.open({
