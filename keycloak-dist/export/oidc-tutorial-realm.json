@@ -402,8 +402,8 @@
   }, {
     "id" : "12ad0a4b-4827-4911-ad8e-eee8885349ee",
     "username" : "user1",
-    "firstName" : "hoge",
-    "lastName" : "fuga",
+    "firstName" : "user",
+    "lastName" : "1",
     "email" : "user1@example.com",
     "emailVerified" : false,
     "createdTimestamp" : 1721022482533,
